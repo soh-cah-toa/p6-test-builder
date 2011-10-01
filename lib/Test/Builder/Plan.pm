@@ -12,8 +12,12 @@ class Test::Builder::Plan {
     }
 
     method footer(Int $ran) returns Str {
-        return '' if $ran == $.expected;
-        return "Expected $.expected but ran $ran";
+        # Determine whether to use past or present tense in message
+        my Str $tests = $.expected > 1 ?? 'tests' !! 'test';
+
+        return $ran == $.expected
+            ?? ''
+            !! "\# Looks like you planned $.expected $tests but ran $ran.";
     }
 }
 
