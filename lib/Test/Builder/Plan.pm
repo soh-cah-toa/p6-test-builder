@@ -1,6 +1,16 @@
 # Copyright (C) 2011, Kevin Polulak <kpolulak@gmail.com>.
 
-class Test::Builder::Plan {
+role Test::Builder::Plan::Base {
+    method header() returns Str {
+        return '';
+    }
+
+    method footer(Int $ran) returns Str {
+        return "1..$ran";
+    }
+}
+
+class Test::Builder::Plan does Test::Builder::Plan::Base {
     has Int $.expected is rw;
 
     submethod BUILD(:$.expected = 0) {
@@ -20,6 +30,8 @@ class Test::Builder::Plan {
             !! "\# Looks like you planned $.expected $tests but ran $ran.";
     }
 }
+
+class Test::Builder::NoPlan does Test::Builder::Plan::Base { }
 
 # vim: ft=perl6
 

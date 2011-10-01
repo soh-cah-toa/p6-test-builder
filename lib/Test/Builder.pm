@@ -53,10 +53,10 @@ use Test::Builder::Plan;
 use Test::Builder::Output;
 
 class Test::Builder:<soh_cah_toa 0.0.1>;
-    has Test::Builder::Test   @!results;
+    has Test::Builder::Test       @!results;
 
-    has Test::Builder::Plan   $!plan;
-    has Test::Builder::Output $!output;
+    has Test::Builder::Plan::Base $!plan;
+    has Test::Builder::Output     $!output;
 
     submethod BUILD(Test::Builder::Plan   $!plan?,
                     Test::Builder::Output $!output = Test::Builder::Output.new) { }
@@ -71,6 +71,12 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         die 'Plan already set!' if $!plan;
 
         $!plan = Test::Builder::Plan.new(:expected($tests));
+    }
+
+    multi method plan(Whatever $tests) {
+        die 'Plan already set!' if $!plan;
+
+        $!plan = Test::Builder::NoPlan.new;
     }
 
     # TODO Implement skip_all and no_plan
