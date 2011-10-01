@@ -48,6 +48,10 @@ For further information, please see LICENSE or visit
 
 =end pod
 
+use Test::Builder::Test;
+use Test::Builder::Plan;
+use Test::Builder::Output;
+
 class Test::Builder:<soh_cah_toa 0.0.1>;
     has Test::Builder::Test   @!results;
 
