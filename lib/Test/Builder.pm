@@ -112,13 +112,33 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $passed;
     }
 
-    method todo(Mu $passed, Str $description = '', Str $reason = '') {
+    method is(Mu $got, Mu $expected, Str $description= '') {
+        my Bool $test = ?$got eq ?$expected;
+
+        self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
+                                                 :passed($test),
+                                                 :description($description)));
+
+        return $test;
+    }
+
+    method isnt(Mu $got, Mu $expected, Str $description= '') {
+        my Bool $test = ?$got ne ?$expected;
+
+        self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
+                                                 :passed($test),
+                                                 :description($description)));
+
+        return $test;
+    }
+
+    method todo(Mu $todo, Str $description = '', Str $reason = '') {
         self!report_test(Test::Builder::Test.new(:todo(Bool::True),
                                                  :number(self!get_test_number),
                                                  :reason($reason),
                                                  :description($description)));
 
-        return $passed;
+        return $todo;
     }
 
     method !report_test(Test::Builder::Test::Base $test) {
