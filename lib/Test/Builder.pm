@@ -28,6 +28,16 @@ Test::Builder - flexible framework for building TAP test libraries
 
 =head1 METHODS
 
+=over 4
+
+=item ok()
+
+=item nok()
+
+=item todo()
+
+=back
+
 =head1 ACKNOWLEDGEMENTS
 
 C<Test::Builder> was largely inspired by chromatic's work on the old
@@ -89,6 +99,14 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
     method ok(Mu $passed, Str $description= '') {
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
                                                  :passed(?$passed),
+                                                 :description($description)));
+
+        return $passed;
+    }
+
+    method nok(Mu $passed, Str $description= '') {
+        self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
+                                                 :passed(!$passed),
                                                  :description($description)));
 
         return $passed;
