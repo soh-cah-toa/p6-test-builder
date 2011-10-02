@@ -1,6 +1,6 @@
 # Copyright (C) 2011, Kevin Polulak <kpolulak@gmail.com>.
 
-class Test::Builder::Output {
+class Test::Builder::Output;
     has $!stdout;
     has $!stderr;
 
@@ -12,11 +12,13 @@ class Test::Builder::Output {
     }
 
     method diag(Str $msg is copy) {
-        $msg ~~ s/^ <!before \#>/\# <space>/;
-        $msg ~~ s:g/\n <!before \#>/\n \# <space>/;
+        # XXX Uncomment lines when Rakudo supports negative lookahead assertions
+        #$msg ~~ s/^ <!before \#>/\# <space>/;
+        #$msg ~~ s:g/\n <!before \#>/\n \# <space>/;
+
+        $msg = '# ' ~ $msg;
         $!stderr.say($msg);
     }
-}
 
 # vim: ft=perl6
 

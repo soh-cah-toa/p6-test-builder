@@ -56,7 +56,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
     has Test::Builder::Test       @!results;
 
     has Test::Builder::Plan::Base $!plan;
-    has Test::Builder::Output     $!output;
+    has Test::Builder::Output     $!output handles 'diag';
 
     submethod BUILD(Test::Builder::Plan   $!plan?,
                     Test::Builder::Output $!output = Test::Builder::Output.new) { }
