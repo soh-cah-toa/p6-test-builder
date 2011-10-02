@@ -90,6 +90,17 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
                                                  :passed(?$passed),
                                                  :description($description)));
+
+        return $passed;
+    }
+
+    method todo(Mu $passed, Str $description = '', Str $reason = '') {
+        self!report_test(Test::Builder::Test.new(:todo(Bool::True),
+                                                 :number(self!get_test_number),
+                                                 :reason($reason),
+                                                 :description($description)));
+
+        return $passed;
     }
 
     method !report_test(Test::Builder::Test::Base $test) {
