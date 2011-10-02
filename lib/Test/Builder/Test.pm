@@ -52,7 +52,7 @@ class Test::Builder::Test::Todo does Test::Builder::Test::Reason {
     method status() returns Hash {
         my %status = self.SUPER::status;
 
-        %status<todo>          = 1;
+        %status<todo>          = Bool::True;
         %status<passed>        = Bool::True;
         %status<really_passed> = $.passed;
 
@@ -67,7 +67,7 @@ class Test::Builder::Test::Skip does Test::Builder::Test::Reason {
 
     method status() returns Hash {
         my %status    = self.SUPER::status;
-        %status<skip> = 1;
+        %status<skip> = Bool::True;
 
         return %status;
     }
@@ -81,12 +81,12 @@ class Test::Builder::Test {
 
     # XXX Should $passed be of type Bool instead?
 
-    method new(Int :$number,
-               Int :$passed      = 1,
-               Int :$skip        = 0,
-               Int :$todo        = 0,
-               Str :$reason      = '',
-               Str :$description = '') {
+    method new(Int  :$number,
+               Bool :$passed      = Bool::True,
+               Bool :$skip        = Bool::False,
+               Bool :$todo        = Bool::False,
+               Str  :$reason      = '',
+               Str  :$description = '') {
 
         return Test::Builder::Test::Todo.new(:description($description),
                                              :passed($passed),
@@ -94,16 +94,16 @@ class Test::Builder::Test {
                                              :number($number)) if $todo;
 
         return Test::Builder::Test::Skip.new(:description($description),
-                                             :passed(1),
+                                             :passed(Bool::True),
                                              :reason($reason),
                                              :number($number)) if $skip;
 
         return Test::Builder::Test::Pass.new(:description($description),
-                                             :passed(1),
+                                             :passed(Bool::True),
                                              :number($number)) if $passed;
 
         return Test::Builder::Test::Fail.new(:description($description),
-                                             :passed(0),
+                                             :passed(Bool::False),
                                              :number($number));
     }
 

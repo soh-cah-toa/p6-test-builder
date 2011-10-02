@@ -88,7 +88,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
 
     method ok(Mu $passed, Str $description= '') {
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
-                                                 :passed($passed),
+                                                 :passed(?$passed),
                                                  :description($description)));
     }
 
