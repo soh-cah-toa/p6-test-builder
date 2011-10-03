@@ -23,11 +23,11 @@ class Test::Builder::Plan does Test::Builder::Plan::Base {
 
     method footer(Int $ran) returns Str {
         # Determine whether to use past or present tense in message
-        my Str $tests = $.expected > 1 ?? 'tests' !! 'test';
+        my Str $s = $.expected == 1 ?? '' !! 's';
 
         return $ran == $.expected
             ?? ''
-            !! "\# Looks like you planned $.expected $tests but ran $ran.";
+            !! "\# Looks like you planned $.expected test$s but ran $ran.";
     }
 }
 
