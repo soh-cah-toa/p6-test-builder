@@ -1,5 +1,6 @@
 # Copyright (C) 2011, Kevin Polulak <kpolulak@gmail.com>.
 
+# TODO Define Test::Builder::Exception
 # TODO Make Test::Builder a singleton object
 # TODO Replace die() with fail()
 
@@ -26,9 +27,45 @@ Test::Builder - flexible framework for building TAP test libraries
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+C<Test::Builder> is meant to serve as a generic backend for test libraries. Put
+differently, it provides the basic "building blocks" and generic functionality
+needed for building your own application-specific TAP test libraries.
+
+C<Test::Builder> conforms to the Test Anything Protocol (TAP) specification.
+
+=head1 USE
+
+=head2 Object Initialization
 
 =over 4
+
+=item B<new()>
+
+Returns a new C<Test::Builder> singleton object.
+
+The C<new()> method only returns a new object the first time that it's called.
+If called again, it simply returns the same object. This allows multiple
+modules to share the global information about the TAP harness's state.
+
+Alternatively, if a singleton object is too limiting, you can use the
+C<create()> method instead.
+
+=item B<create()>
+
+# TODO
+
+=back
+
+=head2 Implementing Tests
+
+=over 4
+
+=item plan()
+
+Declares how many tests are going to be run.
+
+If called as C<.plan(*)>, then a plan will not be set. However, it is your job
+to call C<.done()> when all tests have been run.
 
 =item ok()
 
@@ -37,6 +74,10 @@ Test::Builder - flexible framework for building TAP test libraries
 =item todo()
 
 =back
+
+=head1 SEE ALSO
+
+L<http://testanything.org>
 
 =head1 ACKNOWLEDGEMENTS
 
