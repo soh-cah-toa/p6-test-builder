@@ -24,6 +24,16 @@ role Test::Builder::Test::Base {
 
         return $result;
     }
+
+    method verbose_report(%verbose) returns Str {
+        my $got      = %verbose<got>;
+        my $expected = %verbose<expected>;
+
+        my Str $msg  =  '    got: ' ~ $got ~ "\n";
+        $msg        ~= 'expected: ' ~ $expected;
+
+        return $msg;
+    }
 }
 
 role Test::Builder::Test::Reason does Test::Builder::Test::Base {

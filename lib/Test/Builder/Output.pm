@@ -7,7 +7,7 @@ class Test::Builder::Output;
     submethod BUILD($!stdout = $*OUT, $!stderr = $*ERR) { ... }
 
     method write(Str $msg is copy) {
-        $msg ~~ s:g/\n <!before \#>/\n \# <space>/;
+        #$msg ~~ s:g/\n <!before \#>/\n \# <space>/;
         $!stdout.say($msg);
     }
 
@@ -16,7 +16,9 @@ class Test::Builder::Output;
         #$msg ~~ s/^ <!before \#>/\# <space>/;
         #$msg ~~ s:g/\n <!before \#>/\n \# <space>/;
 
-        $msg = '# ' ~ $msg;
+        $msg ~~ s/^/\x23 \x20/;
+        $msg.=subst("\x0a", "\x0a\x23\x20");
+
         $!stderr.say($msg);
     }
 

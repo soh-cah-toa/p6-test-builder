@@ -115,9 +115,20 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
     method is(Mu $got, Mu $expected, Str $description= '') {
         my Bool $test = ?$got eq ?$expected;
 
-        self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
-                                                 :passed($test),
-                                                 :description($description)));
+        # Display verbose report unless test passed
+        if $test {
+            self!report_test(Test::Builder::Test.new(
+                :number(self!get_test_number),
+                :passed($test),
+                :description($description)));
+        }
+        else {
+            self!report_test(Test::Builder::Test.new(
+                    :number(self!get_test_number),
+                    :passed($test),
+                    :description($description)),
+                :verbose({ got => $got, expected => $expected }));
+        }
 
         return $test;
     }
@@ -125,9 +136,20 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
     method isnt(Mu $got, Mu $expected, Str $description= '') {
         my Bool $test = ?$got ne ?$expected;
 
-        self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
-                                                 :passed($test),
-                                                 :description($description)));
+        # Display verbose report unless test passed
+        if $test {
+            self!report_test(Test::Builder::Test.new(
+                :number(self!get_test_number),
+                :passed($test),
+                :description($description)));
+        }
+        else {
+            self!report_test(Test::Builder::Test.new(
+                    :number(self!get_test_number),
+                    :passed($test),
+                    :description($description)),
+                :verbose({ got => $got, expected => $expected }));
+        }
 
         return $test;
     }
@@ -141,12 +163,13 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $todo;
     }
 
-    method !report_test(Test::Builder::Test::Base $test) {
+    method !report_test(Test::Builder::Test::Base $test, :%verbose) {
         die 'No plan set!' unless $!plan;
 
         @!results.push($test);
 
         $!output.write($test.report);
+        $!output.diag($test.verbose_report(%verbose)) if %verbose;
     }
 
     method !get_test_number() {
