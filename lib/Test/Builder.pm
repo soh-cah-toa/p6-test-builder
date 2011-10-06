@@ -103,27 +103,45 @@ use Test::Builder::Test;
 use Test::Builder::Plan;
 use Test::Builder::Output;
 
-class Test::Builder:<soh_cah_toa 0.0.1>;
+class Test::Builder { ... };
+
+#= Global Test::Builder singleton object
+my Test::Builder $TEST_BUILDER;
+
+class Test::Builder:<soh_cah_toa 0.0.1> {
     has Test::Builder::Test       @!results;
 
     has Test::Builder::Plan::Base $!plan;
     has Test::Builder::Output     $!output handles 'diag';
 
+    #= Returns the Test::Builder singleton object
+    method new() {
+        return $TEST_BUILDER //= self.create;
+    }
+
+    #= Returns a new Test::Builder instance
+    method create() {
+        return $?CLASS.bless(*);
+    }
+
     submethod BUILD(Test::Builder::Plan   $!plan?,
                     Test::Builder::Output $!output = Test::Builder::Output.new) { }
 
     # TODO Refactor done() into an END block
+    #= Declares that no more tests need to be run
     method done() {
         my $footer = $!plan.footer(+@!results);
         $!output.write($footer) if $footer;
     }
 
+    #= Declares the number of tests to run
     multi method plan(Int $tests) {
         die 'Plan already set!' if $!plan;
 
         $!plan = Test::Builder::Plan.new(:expected($tests));
     }
 
+    #= Declares that the number of tests is unknown
     multi method plan(Whatever $tests) {
         die 'Plan already set!' if $!plan;
 
@@ -133,10 +151,12 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
     # TODO Implement skip_all and no_plan
     multi method plan(Str $explanation) { ... }
 
+    #= Default candidate for arguments of the wrong type
     multi method plan(Any $any) {
         die 'Unknown plan!';
     }
 
+    #= Tests the first argument for boolean truth
     method ok(Mu $passed, Str $description= '') {
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
                                                  :passed(?$passed),
@@ -145,6 +165,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $passed;
     }
 
+    #= Tests the first argument for boolean false
     method nok(Mu $passed, Str $description= '') {
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
                                                  :passed(!$passed),
@@ -153,6 +174,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $passed;
     }
 
+    #= Verifies that the first two arguments are equal
     method is(Mu $got, Mu $expected, Str $description= '') {
         my Bool $test = ?$got eq ?$expected;
 
@@ -174,6 +196,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $test;
     }
 
+    #= Verifies that the first two arguments are not equal
     method isnt(Mu $got, Mu $expected, Str $description= '') {
         my Bool $test = ?$got ne ?$expected;
 
@@ -195,6 +218,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $test;
     }
 
+    #= Marks a given number of tests as TODO
     method todo(Mu $todo, Str $description = '', Str $reason = '') {
         self!report_test(Test::Builder::Test.new(:todo(Bool::True),
                                                  :number(self!get_test_number),
@@ -204,6 +228,7 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         return $todo;
     }
 
+    #= Displays the results of the given test
     method !report_test(Test::Builder::Test::Base $test, :%verbose) {
         die 'No plan set!' unless $!plan;
 
@@ -213,9 +238,11 @@ class Test::Builder:<soh_cah_toa 0.0.1>;
         $!output.diag($test.verbose_report(%verbose)) if %verbose;
     }
 
+    #= Returns the current test number
     method !get_test_number() {
         return +@!results + 1;
     }
+}
 
 # vim: ft=perl6
 
