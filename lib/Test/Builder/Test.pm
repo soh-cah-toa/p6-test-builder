@@ -1,7 +1,6 @@
 # Copyright (C) 2011, Kevin Polulak <kpolulak@gmail.com>.
 
 # TODO  Rename Test::Builder::Base to something else
-# FIXME Refactor Test::Builder::Base inheritance tree
 
 role Test::Builder::Test::Base {
     has      $.passed;
@@ -88,8 +87,6 @@ class Test::Builder::Test {
     has $!number;
     has $!diag;
     has $!description;
-
-    # XXX Should $passed be of type Bool instead?
 
     method new(Int  :$number,
                Bool :$passed      = Bool::True,

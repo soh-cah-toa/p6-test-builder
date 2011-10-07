@@ -1,7 +1,6 @@
 # Copyright (C) 2011, Kevin Polulak <kpolulak@gmail.com>.
 
 # TODO Define Test::Builder::Exception
-# TODO Make Test::Builder a singleton object
 # TODO Replace die() with fail()
 
 =begin pod
@@ -41,7 +40,7 @@ C<Test::Builder> conforms to the Test Anything Protocol (TAP) specification.
 
 =item B<new()>
 
-Returns a new C<Test::Builder> singleton object.
+Returns the C<Test::Builder> singleton object.
 
 The C<new()> method only returns a new object the first time that it's called.
 If called again, it simply returns the same object. This allows multiple
@@ -52,26 +51,55 @@ C<create()> method instead.
 
 =item B<create()>
 
-# TODO
+Returns a new C<Test::Builder> instance.
+
+The C<create()> method should only be used under certain circumstances. For
+instance, when testing C<Test::Builder>-based modules. In all other cases, it
+is recommened that you stick to using C<new()> instead.
 
 =back
 
 =head2 Implementing Tests
 
+The following methods are responsible for performing the actual tests.
+
+All methods take an optional string argument describing the nature of the test.
+
 =over 4
 
-=item plan()
+=item B<plan(Int $tests)>
 
 Declares how many tests are going to be run.
 
 If called as C<.plan(*)>, then a plan will not be set. However, it is your job
-to call C<.done()> when all tests have been run.
+to call C<done()> when all tests have been run.
 
-=item ok()
+=item B<ok(Mu $test, Str $description)>
 
-=item nok()
+Evalutes C<$test> in a boolean context. The test will pass if the expression
+evalutes to C<Bool::True> and fail otherwise.
 
-=item todo()
+=item B<nok(Mu $test, Str $description)>
+
+The antithesis of C<ok()>. Evalutes C<$test> in a boolean context. The test
+will pass if the expression evalutes to C<Bool::False> and fail otherwise.
+
+=back
+
+=head2 Modifying Test Behavior
+
+=over 4
+
+=item B<todo(Str $reason, Int $count)>
+
+Marks the next C<$count> tests as failures but ignores the fact. Test
+execution will continue after displaying the message in C<$reason>.
+
+It's important to note that even though the tests are marked as failures, they
+will still be evaluated. If a test marked with C<todo()> in fact passes, a
+warning message will be displayed.
+
+# TODO The todo() method doesn't actually does this yet but I want it to
 
 =back
 
@@ -165,21 +193,21 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
     }
 
     #= Tests the first argument for boolean truth
-    method ok(Mu $passed, Str $description= '') {
+    method ok(Mu $test, Str $description= '') {
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
-                                                 :passed(?$passed),
+                                                 :passed(?$test),
                                                  :description($description)));
 
-        return $passed;
+        return $test;
     }
 
     #= Tests the first argument for boolean false
-    method nok(Mu $passed, Str $description= '') {
+    method nok(Mu $test, Str $description= '') {
         self!report_test(Test::Builder::Test.new(:number(self!get_test_number),
-                                                 :passed(!$passed),
+                                                 :passed(!$test),
                                                  :description($description)));
 
-        return $passed;
+        return $test;
     }
 
     #= Verifies that the first two arguments are equal
@@ -226,7 +254,7 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
         return $test;
     }
 
-    #= Marks a given number of tests as TODO
+    #= Marks a given number of tests as failures
     method todo(Mu $todo, Str $description = '', Str $reason = '') {
         self!report_test(Test::Builder::Test.new(:todo(Bool::True),
                                                  :number(self!get_test_number),
