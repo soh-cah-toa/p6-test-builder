@@ -109,10 +109,17 @@ class Test::Builder { ... };
 my Test::Builder $TEST_BUILDER;
 
 class Test::Builder:<soh_cah_toa 0.0.1> {
+    #= Stack containing results of each test
     has Test::Builder::Test       @!results;
 
+    #= Sets up number of tests to rune
     has Test::Builder::Plan::Base $!plan;
+
+    #= Handles all I/O related to test results
     has Test::Builder::Output     $!output handles 'diag';
+
+    #= Specifies whether or not .done() has been called
+    has Bool                      $.done_testing is rw;
 
     #= Returns the Test::Builder singleton object
     method new() {
@@ -127,9 +134,10 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
     submethod BUILD(Test::Builder::Plan   $!plan?,
                     Test::Builder::Output $!output = Test::Builder::Output.new) { }
 
-    # TODO Refactor done() into an END block
     #= Declares that no more tests need to be run
     method done() {
+        $.done_testing = Bool::True;
+
         my $footer = $!plan.footer(+@!results);
         $!output.write($footer) if $footer;
     }
@@ -243,6 +251,8 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
         return +@!results + 1;
     }
 }
+
+END { $TEST_BUILDER.done unless $TEST_BUILDER.done_testing }
 
 # vim: ft=perl6
 
