@@ -143,7 +143,7 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
     #= Sets up number of tests to rune
     has Test::Builder::Plan::Base $!plan;
 
-    #= Handles all I/O related to test results
+    #= Handles all output operations
     has Test::Builder::Output     $!output handles 'diag';
 
     #= Specifies whether or not .done() has been called
