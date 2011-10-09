@@ -1,8 +1,6 @@
 # Copyright (C) 2011, Kevin Polulak <kpolulak@gmail.com>.
 
-# TODO  Rename Test::Builder::Base to something else
-
-role Test::Builder::Test::Base {
+role Test::Builder::Test::Generic {
     has      $.passed;
     has Int  $.number     = 0;
     has Str  $.diagnostic = '???';
@@ -35,7 +33,7 @@ role Test::Builder::Test::Base {
     }
 }
 
-role Test::Builder::Test::Reason does Test::Builder::Test::Base {
+role Test::Builder::Test::Reason does Test::Builder::Test::Generic {
     has Str $.reason;
 
     #submethod BUILD($.reason) { }
@@ -49,8 +47,8 @@ role Test::Builder::Test::Reason does Test::Builder::Test::Base {
     }
 }
 
-class Test::Builder::Test::Pass does Test::Builder::Test::Base { }
-class Test::Builder::Test::Fail does Test::Builder::Test::Base { }
+class Test::Builder::Test::Pass does Test::Builder::Test::Generic { }
+class Test::Builder::Test::Fail does Test::Builder::Test::Generic { }
 
 class Test::Builder::Test::Todo does Test::Builder::Test::Reason {
     method report() returns Str {

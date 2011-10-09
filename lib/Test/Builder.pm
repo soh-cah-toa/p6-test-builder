@@ -138,16 +138,16 @@ my Test::Builder $TEST_BUILDER;
 
 class Test::Builder:<soh_cah_toa 0.0.1> {
     #= Stack containing results of each test
-    has Test::Builder::Test       @!results;
+    has Test::Builder::Test          @!results;
 
     #= Sets up number of tests to rune
-    has Test::Builder::Plan::Base $!plan;
+    has Test::Builder::Plan::Generic $!plan;
 
     #= Handles all output operations
-    has Test::Builder::Output     $!output handles 'diag';
+    has Test::Builder::Output        $!output handles 'diag';
 
     #= Specifies whether or not .done() has been called
-    has Bool                      $.done_testing is rw;
+    has Bool                         $.done_testing is rw;
 
     #= Returns the Test::Builder singleton object
     method new() {
@@ -265,7 +265,7 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
     }
 
     #= Displays the results of the given test
-    method !report_test(Test::Builder::Test::Base $test, :%verbose) {
+    method !report_test(Test::Builder::Test::Generic $test, :%verbose) {
         die 'No plan set!' unless $!plan;
 
         @!results.push($test);

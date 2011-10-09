@@ -82,7 +82,7 @@ For further information, please see LICENSE or visit
 =end pod
 
 #= Generic role for common methods
-role Test::Builder::Plan::Base {
+role Test::Builder::Plan::Generic {
     #= Returns generic header
     method header() returns Str {
         return '';
@@ -95,7 +95,7 @@ role Test::Builder::Plan::Base {
 }
 
 #= Manages the plan set for the test harness
-class Test::Builder::Plan does Test::Builder::Plan::Base {
+class Test::Builder::Plan does Test::Builder::Plan::Generic {
     has Int $.expected is rw;    #= Number of tests that "should" be run
 
     submethod BUILD(:$.expected = 0) {
@@ -119,7 +119,7 @@ class Test::Builder::Plan does Test::Builder::Plan::Base {
 }
 
 #= Manages the pseudo-plan when one isn't set
-class Test::Builder::NoPlan does Test::Builder::Plan::Base { }
+class Test::Builder::NoPlan does Test::Builder::Plan::Generic { }
 
 # vim: ft=perl6
 
