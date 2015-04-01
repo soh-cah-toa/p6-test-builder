@@ -136,7 +136,7 @@ class Test::Builder { ... };
 #= Global Test::Builder singleton object
 my Test::Builder $TEST_BUILDER;
 
-class Test::Builder:<soh_cah_toa 0.0.1> {
+class Test::Builder:auth<soh_cah_toa>:ver<0.0.1> {
     #= Stack containing results of each test
     has Test::Builder::Test          @!results;
 
@@ -280,7 +280,10 @@ class Test::Builder:<soh_cah_toa 0.0.1> {
     }
 }
 
-END { $TEST_BUILDER.done unless $TEST_BUILDER.done_testing }
+END {
+    $TEST_BUILDER.done
+        if $TEST_BUILDER.defined && !$TEST_BUILDER.done_testing
+}
 
 # vim: ft=perl6
 
