@@ -97,7 +97,7 @@ class Test::Builder::Output;
     has $!stderr;    #= Filehandle used by diag()
 
     # XXX Can I just set default attribute values and remove BUILD()?
-    submethod BUILD($!stdout = $*OUT, $!stderr = $*ERR) { ... }
+    submethod BUILD($!stdout = $*OUT, $!stderr = $*ERR) { }
 
     #= Displays output to filehandle set by $.stdout
     method write(Str $msg is copy) {
